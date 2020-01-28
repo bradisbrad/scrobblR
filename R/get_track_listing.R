@@ -26,6 +26,10 @@ get_track_listing <- function(album, artist, api_key){
     artist = res$album$artist
   )
 
+  get_track_info(res_tbl$track[2], res_tbl$artist[2], api_key = api_key)
+
+
   res_tbl %>%
-    purrr::map2(artist, track, get_track_info, api_key = api_key)
+    mutate(track_info = purrr::map(track, get_track_info, artist = artist, api_key = api_key, append = T)) %>%
+    unnest(track_info)
 }
