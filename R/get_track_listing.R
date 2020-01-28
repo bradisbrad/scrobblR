@@ -1,4 +1,4 @@
-get_track_listing <- function(api_key, artist, album){
+get_track_listing <- function(album, artist, api_key){
 
   ## Root path
   rpath <- "http://ws.audioscrobbler.com/2.0/?method=album.getinfo"
@@ -21,9 +21,11 @@ get_track_listing <- function(api_key, artist, album){
   res_tbl <- tibble::tibble(
     track_no = res$album$tracks$track$`@attr`$rank,
     track = res$album$tracks$track$name,
-    duration_seconds = as.numeric(res$album$tracks$track$duration)
+    duration_seconds = as.numeric(res$album$tracks$track$duration),
+    duration_mins = paste0(duration_seconds %/% 60, ':', str_pad(duration_seconds %% 60, 2, side = 'left', pad = '0')),
+    artist = res$album$artist
   )
 
   res_tbl %>%
-    mutate(duration_mins = paste0(duration_seconds %/% 60, ':', str_pad(duration_seconds %% 60, 2, side = 'left', pad = '0')))
+    purrr::map2(artist, track, get_track_info, api_key = api_key)
 }
