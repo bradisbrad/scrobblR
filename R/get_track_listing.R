@@ -1,4 +1,4 @@
-get_track_listing <- function(api_key, artist, album, json = T){
+get_track_listing <- function(api_key, artist, album){
 
   ## Root path
   rpath <- "http://ws.audioscrobbler.com/2.0/?method=album.getinfo"
@@ -10,17 +10,13 @@ get_track_listing <- function(api_key, artist, album, json = T){
   params[['api_key']] <- sprintf('&api_key=%s', api_key)
   params[['artist']] <- sprintf('&artist=%s', artist)
   params[['album']] <- sprintf('&album=%s', album)
+  params[['json']] <- '&format=json'
 
-  ## Optional
-  if(json){
-    params[['json']] <- '&format=json'
-  }
 
   param_string <- paste0(unlist(params, use.names = F), collapse = '')
 
   call <- paste0(rpath, param_string, collapse = '')
   res <- jsonlite::fromJSON(call)
-  str(res)
 
   res_tbl <- tibble::tibble(
     track_no = res$album$tracks$track$`@attr`$rank,
