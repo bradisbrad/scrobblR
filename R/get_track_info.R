@@ -1,4 +1,4 @@
-get_track_info <- function(api_key, artist, track){
+get_track_info <- function(track, artist, api_key){
 
   ## Root path
   rpath <- "http://ws.audioscrobbler.com/2.0/?method=track.getinfo"
