@@ -1,4 +1,4 @@
-get_track_info <- function(track, artist, api_key){
+get_track_info <- function(track, artist, api_key, append = F){
 
   ## Root path
   rpath <- "http://ws.audioscrobbler.com/2.0/?method=track.getinfo"
@@ -29,5 +29,9 @@ get_track_info <- function(track, artist, api_key){
     artist = res$track$artist$name
   )
 
+  if(append){
+    res_tbl <- res_tbl %>%
+      select(listeners, playcount, avg_plays)
+  }
   res_tbl
 }
